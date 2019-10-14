@@ -1,5 +1,5 @@
 import socket 
-import pickle 
+import dill as pickle 
 from threading import Thread
 import sys
 import threading 
@@ -11,6 +11,9 @@ port=9876
 Head_size=10
 
 Entries={}
+Social_Numbers=[]
+Server_Sockets=[]
+
 
 server_socket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 server_socket.bind((ip,port))
@@ -22,15 +25,16 @@ def Handle_Client(client_socket):
             message_length=int(data.strip().decode("utf-8"))
             message=client_socket.recv(message_length)
             obj_actual=pickle.loads(message)
+            print(obj_actual)
             flag=False
-            if(obj_actual.Social_Secuity in Entries):
+            if(obj_actual.return_Social_Security() in Entries):
                 flag=True
             if(flag):
                 message="Entry Already Recorded".encode("utf-8")
             else:
                 message="New Entry Recorded".encode("utf-8")
-                Entries[obj_actual.Social_Security]=obj_actual
-            message_length=f"{len(message):<Head_size}".enocde("utf-8")
+                Entries[obj_actual.return_Social_Security()]=obj_actual
+            message_length=f"{len(message):<{Head_size}}".encode("utf-8")
             client_socket.send(message_length+message)
         except Exception as e:
             print(e)
