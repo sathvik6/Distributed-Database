@@ -1,5 +1,5 @@
 import socket
-import pickle
+import dill as pickle
 import time
 import sys
 
@@ -9,6 +9,13 @@ class Data:
         self.Email=Email
         self.PhoneNumber=PhoneNumber
         self.Social_Security=Social_Security
+        
+    def return_Social_Security(self):
+        return self.Social_Security
+    
+    def __repr__(self):
+        return str(self.Social_Security)
+
 name=socket.gethostname()
 ip=socket.gethostbyname(name)
 port=9876
