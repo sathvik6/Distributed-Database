@@ -23,22 +23,31 @@ def Handle_Client(client_socket):
         try:
             data=client_socket.recv(Head_size)
             message_length=int(data.strip().decode("utf-8"))
-            message=client_socket.recv(message_length)
-            obj_actual=pickle.loads(message)
-            print(obj_actual)
-            flag=False
-            if(obj_actual.return_Social_Security() in Entries):
-                flag=True
-            if(flag):
-                message="Entry Already Recorded".encode("utf-8")
-            else:
-                message="New Entry Recorded".encode("utf-8")
-                Entries[obj_actual.return_Social_Security()]=obj_actual
-            message_length=f"{len(message):<{Head_size}}".encode("utf-8")
-            client_socket.send(message_length+message)
-        except Exception as e:
-            print(e)
-            break
+            message=client_socket.recv(message_length).decode("utf-8")
+	    if(message=="ADD"):
+		    data=client_socket.recv(Head_size)
+            	    message_length=int(data.strip().decode("utf-8"))
+            	    message=client_socket.recv(message_length)
+		    obj_actual=pickle.loads(message)
+		    print(obj_actual)
+		    flag=False
+		    if(obj_actual.return_Social_Security() in Entries):
+		        flag=True
+		    if(flag):
+		        message="Entry Already Recorded".encode("utf-8")
+		    else:
+		        message="New Entry Recorded".encode("utf-8")
+		        Entries[obj_actual.return_Social_Security()]=obj_actual
+		    message_length=f"{len(message):<{Head_size}}".encode("utf-8")
+		    client_socket.send(message_length+message)
+		except Exception as e:
+		    print(e)
+		    break
+	   elif(message=="RETRE"):
+		    message=pickle.dumps(Entries)
+		    message_length=f"{len(message):<{Head_size}}".encode("utf-8")
+		    client_socket.send(message_length+message)
+		
 
 while True:
     try:

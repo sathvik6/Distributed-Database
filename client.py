@@ -31,17 +31,29 @@ except Exception as e:
     print("Unable to Connect to the Server")
     sys.exit()
 
+choice=0
+Data_send="ADD"
 while True:
     try:
-        Name=input("Enter Name :")
-        Email=input("Enter Email Id :")
-        PhoneNumber=int(input("Enter Phone Number :"))
-        Social_Security=int(input("Enter Social Security Number :"))
-        Data_send=Data(Name,Email,PhoneNumber,Social_Security)
-        Data_sendx=pickle.dumps(Data_send)
-        Data_sendx_length=f"{len(Data_sendx):<{Head_size}}".encode("utf-8")
-        client_socket.send(Data_sendx_length+Data_sendx)
-        
+	choice=int(input("Enter the Type of Query"))
+        switch (choice):
+		case 1:	
+			Data_send="ADD".encode("utf-8")	
+			Data_sendx_length=f"{len(Data_sendx):<{Head_size}}".encode("utf-8")
+			client_socket.send(Data_sendx_length+Data_sendx)			
+			Name=input("Enter Name :")
+			Email=input("Enter Email Id :")
+			PhoneNumber=int(input("Enter Phone Number :"))
+			Social_Security=int(input("Enter Social Security Number :"))
+			Data_send=Data(Name,Email,PhoneNumber,Social_Security)
+			Data_sendx=pickle.dumps(Data_send)
+			Data_sendx_length=f"{len(Data_sendx):<{Head_size}}".encode("utf-8")
+			client_socket.send(Data_sendx_length+Data_sendx)
+			break;
+		case 2:
+			Data_send="RETRE".encode("utf-8:")
+			Data_sendx_length=f"{len(Data_sendx):<{Head_size}}".encode("utf-8")
+			client_socket.send(Data_sendx_length+Data_sendx)				
         response_length=int(client_socket.recv(Head_size).strip().decode("utf-8"))
         response=client_socket.recv(response_length).decode("utf-8")
         print(response)
